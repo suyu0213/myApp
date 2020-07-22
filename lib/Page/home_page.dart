@@ -62,25 +62,66 @@ class _HomePageState extends State<HomePage> {
 
                   return ListView(
                     children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 72 / 35,
-                        child: Swiper(
-                          itemCount: model.swipers.length,
-                          pagination: SwiperPagination(),
-                          autoplay: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            //assets/image: /image/jd1.jpg
-                            return Image.asset(
-                                "assets${model.swipers[index].image}");
-                          },
-                        ),
-                      )
+                      //輪播圖
+                      buildAspectRatio(model),
+                      //圖標分類
+                      buildLogos(model),
                     ],
                   );
                   //return Container();
                 },
               ),
             )));
+  }
+
+//圖標分類
+  Widget buildLogos(HomePageModel model) {
+    //定義一個list數據 列表
+    List<Widget> list = List<Widget>();
+
+    //遍歷model中的logo數組
+    for (int i = 0; i < model.logos.length; i++) {
+      list.add(Container(
+        width: 60.0,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              "assets${model.logos[i].image}",
+              width: 50.0,
+              height: 50.0,
+            ),
+            Text("${model.logos[i].title}")
+          ],
+        ),
+      ));
+    }
+    return Container(
+      color: Colors.lime,
+      height: 170,
+      padding: const EdgeInsets.all(10.0),
+      child: Wrap(
+        spacing: 7.0,
+        runSpacing: 10.0,
+        alignment: WrapAlignment.spaceBetween,
+        children: list,
+      ),
+    );
+  }
+
+//輪播圖
+  AspectRatio buildAspectRatio(HomePageModel model) {
+    return AspectRatio(
+      aspectRatio: 72 / 35,
+      child: Swiper(
+        itemCount: model.swipers.length,
+        pagination: SwiperPagination(),
+        autoplay: true,
+        itemBuilder: (BuildContext context, int index) {
+          //assets/image: /image/jd1.jpg
+          return Image.asset("assets${model.swipers[index].image}");
+        },
+      ),
+    );
   }
 }
 
