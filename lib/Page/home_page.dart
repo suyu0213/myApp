@@ -66,12 +66,92 @@ class _HomePageState extends State<HomePage> {
                       buildAspectRatio(model),
                       //圖標分類
                       buildLogos(model),
+                      //掌上秒殺頭部
+                      buildTGContainer(),
+                      //掌上秒殺商品
+                      buildTGBodyContainer(model),
+                      //廣告1
+                      buildAds(model.pageRow.ad1),
+                      //廣告2
+                      buildAds(model.pageRow.ad2),
                     ],
                   );
                   //return Container();
                 },
               ),
             )));
+  }
+
+//廣告
+  Widget buildAds(List<String> ads) {
+    List<Widget> list = List<Widget>();
+
+    for (int i = 0; i < ads.length; i++) {
+      list.add(Expanded(
+        child: Image.asset("assets${ads[i]}"),
+      ));
+    }
+
+    return Row(
+      children: list,
+    );
+  }
+
+//掌上秒殺商品
+  Container buildTGBodyContainer(HomePageModel model) {
+    return Container(
+      height: 120.0,
+      color: Colors.white,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: model.quicks.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets${model.quicks[index].image}",
+                    width: 85.0,
+                    height: 85.0,
+                  ),
+                  Text(
+                    "${model.quicks[index].price}",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 10.0,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+
+//掌上秒殺頭部
+  Container buildTGContainer() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.all(10.0),
+      color: Colors.white,
+      height: 50.0,
+      child: Row(
+        children: <Widget>[
+          Image.asset(
+            "assets/image/bej.png",
+            width: 90.0,
+            height: 20.0,
+          ),
+          Spacer(),
+          Text("更多秒殺"),
+          Icon(
+            CupertinoIcons.right_chevron,
+            size: 14,
+          ),
+        ],
+      ),
+    );
   }
 
 //圖標分類
