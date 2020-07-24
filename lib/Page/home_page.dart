@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   HomePageModel model = provider.model;
-                  print(model.toJson());
+                  //print(model.toJson());
 
                   return ListView(
                     children: <Widget>[
