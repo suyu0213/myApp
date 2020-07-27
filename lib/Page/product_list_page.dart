@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jd_app/Model/productlist_info_model.dart';
+import 'package:jd_app/Page/product_detail_page.dart';
+import 'package:jd_app/Provider/product_detail_provider.dart';
 import 'package:jd_app/Provider/product_list_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -53,14 +55,30 @@ class _ProductListPageState extends State<ProductListPage> {
                 itemCount: provider.list.length,
                 itemBuilder: (context, index) {
                   ProductInfoModel model = provider.list[index];
-                  print(model.toJson());
+                  // print(model.toJson());
 
                   //展示數據
                   return InkWell(
                     child: buildProductItem(model),
                     onTap: () {
                       //前往商品詳情頁面
-                      print(model.title);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              ChangeNotifierProvider<ProductDetailProvider>(
+                                create: (context) {
+                                  ProductDetailProvider provider =
+                                      ProductDetailProvider();
+                                  provider.loadProduct(id: model.id);
+                                  return provider;
+                                },
+                                child: Consumer<ProductDetailProvider>(
+                                  builder: (_, Provider, __) {
+                                    return Container(
+                                      child: ProductDetailPage(id: model.id),
+                                    );
+                                  },
+                                ),
+                              )));
                     },
                   );
                 });

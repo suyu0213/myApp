@@ -9,6 +9,6 @@ class JdApi {
   //返回的商品列表json
   static const String PRODUCTIONS_LIST = BASE_URL + "/profiles/productionsList";
   //返回商品詳細的json
-  static const String PRODUCTIONS_DETALL =
+  static const String PRODUCTIONS_DETAIL =
       BASE_URL + "/profiles/productionDetail";
 }
