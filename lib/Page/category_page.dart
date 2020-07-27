@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jd_app/Model/category_content_model.dart';
+import 'package:jd_app/Page/product_list_page.dart';
 import 'package:jd_app/Provider/catagory_page_provider.dart';
+import 'package:jd_app/Provider/product_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class CateGoryPage extends StatefulWidget {
@@ -32,7 +34,8 @@ class _CateGoryPageState extends State<CateGoryPage> {
                 builder: (_, provider, __) {
                   // print(provider.isLoading);
                   //加載動畫
-                  if (provider.isLoading) {
+                  if (provider.isLoading &&
+                      provider.categoryNavList.length == 0) {
                     return Center(
                       child: CupertinoActivityIndicator(),
                     );
@@ -62,7 +65,18 @@ class _CateGoryPageState extends State<CateGoryPage> {
                       //分類左側
                       buildNavLeftContainer(provider),
                       //分類右側
-                      buildCategoryContent(provider.categoryContentList),
+                      //Expanded限制雙平排的最大寬度
+                      Expanded(
+                          child: Stack(
+                        children: <Widget>[
+                          buildCategoryContent(provider.categoryContentList),
+                          provider.isLoading
+                              ? Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : Container()
+                        ],
+                      )),
                     ],
                   );
                 },
@@ -73,8 +87,72 @@ class _CateGoryPageState extends State<CateGoryPage> {
 //分類右側
   Widget buildCategoryContent(List<CategoryContentModel> contentList) {
     List<Widget> list = List<Widget>();
+
+    //處裡數據 Title
+    for (int i = 0; i < contentList.length; i++) {
+      list.add(Container(
+        height: 30.0,
+        margin: const EdgeInsets.only(left: 10.0, top: 10.0),
+        child: Text(
+          "${contentList[i].title}",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+        ),
+      ));
+      //商品數據容器
+      List<Widget> descList = List<Widget>();
+
+      for (int j = 0; j < contentList[i].desc.length; j++) {
+        descList.add(InkWell(
+          child: Container(
+            width: 60.0,
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                Image.asset(
+                  "assets${contentList[i].desc[j].img}",
+                  width: 50.0,
+                  height: 50.0,
+                ),
+                Text("${contentList[i].desc[j].text}"),
+              ],
+            ),
+          ),
+          onTap: () {
+            //前往商品頁面
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ChangeNotifierProvider<ProductListProvider>(
+                      create: (context) {
+                        ProductListProvider provider = ProductListProvider();
+                        provider.loadProductList();
+                        return provider;
+                      },
+                      child: Consumer<ProductListProvider>(
+                        builder: (_, Provider, __) {
+                          return Container(
+                            child: ProductListPage(
+                                title: contentList[i].desc[j].text),
+                          );
+                        },
+                      ),
+                    )));
+          },
+        ));
+      }
+
+      //將descList追加到list數據中
+      list.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 7.0,
+          runSpacing: 10.0,
+          alignment: WrapAlignment.start,
+          children: descList,
+        ),
+      ));
+    }
     return Container(
-      width: 324,
+      width: double.infinity,
       color: Colors.white,
       child: ListView(
         children: list,
