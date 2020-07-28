@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:jd_app/Page/index_page.dart';
 import 'package:jd_app/Provider/bottom_navi_provider.dart';
+import 'package:jd_app/Provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider.value(
-      value: BottomNaviProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: BottomNaviProvider(),
+        ),
+        ChangeNotifierProvider<CartProvider>(
+          create: (context) {
+            CartProvider provider = new CartProvider();
+            return provider;
+          },
+        )
+      ],
       child: MyApp(),
     ),
   );

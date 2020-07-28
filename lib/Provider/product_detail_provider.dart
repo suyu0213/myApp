@@ -33,4 +33,26 @@ class ProductDetailProvider with ChangeNotifier {
       notifyListeners();
     });
   }
+
+  //分期區切換
+  void changeBaitiaoSelected(int index) {
+    if (this.model.baitiao[index].select == false) {
+      for (int i = 0; i < this.model.baitiao.length; i++) {
+        if (i == index) {
+          this.model.baitiao[i].select = true;
+        } else {
+          this.model.baitiao[i].select = false;
+        }
+      }
+      notifyListeners();
+    }
+  }
+
+  //數量賦值
+  void changeProductCount(int count) {
+    if (count > 0 && this.model.partData.count != count) {
+      this.model.partData.count = count;
+      notifyListeners();
+    }
+  }
 }
